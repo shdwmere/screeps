@@ -1,4 +1,5 @@
 let CreepRole = require('CreepRole');
+const { strokeHarvest, strokeDeliveryToStructure } = require('./globals');
 
 class RoleHarvester extends CreepRole {
     constructor(minX, maxX, minY, maxY) {
@@ -19,6 +20,7 @@ class RoleHarvester extends CreepRole {
         // se o creep estiver full capacity e nao estiver construindo, manda ele construir 
         if (!creep.memory.entregandoEnergia && creep.store.getFreeCapacity() == 0) {
             creep.memory.entregandoEnergia = true;
+            creep.say('⚡');
         };
 
         if(creep.memory.entregandoEnergia) {
@@ -34,8 +36,7 @@ class RoleHarvester extends CreepRole {
             
             if (estruturas.length > 0) {
                 if (creep.transfer(estruturas[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.say('⚡');
-                    creep.moveTo(estruturas[0], { visualizePathStyle: { stroke: '#ffffff' } });
+                    creep.moveTo(estruturas[0], { visualizePathStyle: { stroke: strokeDeliveryToStructure } });
                 }
             }
 
@@ -55,7 +56,7 @@ class RoleHarvester extends CreepRole {
 
             if (sourceMaisProxima) {
                 if (creep.harvest(sourceMaisProxima) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: '#e0c61d' } });
+                    creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
                 }
             }
         }

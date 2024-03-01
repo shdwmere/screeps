@@ -1,0 +1,16 @@
+TO-DO Screeps
+
+**Refatorar o código das roles:
+
+todos: deixar o código do módulo de cada role praticamente identicos, da mesma forma que o youtuber estava fazendo, todos terão apenas a propriedade working que indicará se ele está ou não trabalhando, nao precisa criar uma propriedade especifica pra isso na memória pois serão setados de acordo com o código da role.
+
+roleHarvester & roleBuilder: aprimorar lógica de reconhecimento da área (na vdd considerar remover se não parecer efetivo)
+
+Criar um novo módulo 'creepsHandler' para manipular os creeps diretamente, incluindo as funcoes:
+• autoSpawnCreep
+• criarBodyParts
+• limparCreepsMortos
+• contarCreeps
+• logContagemCreeps
+no spawn utils vao restar somente os métodos referente a manipulação do spawn.
+(não esquecer de atualizar as importações require nos módulos dos creeps..)

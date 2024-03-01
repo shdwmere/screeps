@@ -1,4 +1,5 @@
 let CreepRole = require('CreepRole');
+const { strokeHarvest, strokeUpgrade } = require('./globals');
 
 class RoleUpgrader extends CreepRole {
     constructor() {
@@ -20,7 +21,7 @@ class RoleUpgrader extends CreepRole {
         
         if (creep.memory.aprimorandoControlador) {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: '#13d14c' } });
+                creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: strokeUpgrade } });
             }
         } else {
             let sources = creep.room.find(FIND_SOURCES);
@@ -28,7 +29,7 @@ class RoleUpgrader extends CreepRole {
 
             if (sourceMaisProxima) {
                 if (creep.harvest(sourceMaisProxima) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: '#e0c61d' } });
+                    creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
                 }
             }
         }
