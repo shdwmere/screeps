@@ -5,12 +5,10 @@ let spawnHandler = require('spawnHandler')
 let creepsHandler = require('creepsHandler')
 
 module.exports.loop = function () {
+    spawnHandler.definirSpawns();
+    spawnHandler.identificadorVisualdoSpawn();
 
     creepsHandler.limparCreepsMortos();
-
-    // funções essenciais
-    spawnHandler.identificadorVisualdoSpawn();
-    spawnHandler.definirSpawns();
 
     // delimitando áreas de trabalho
     let areaDeConstrucao = {
