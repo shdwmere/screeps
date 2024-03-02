@@ -3,16 +3,12 @@ const { strokeHarvest, strokeBuild } = require('./globals');
 let RoleUpgrader = require('RoleUpgrader');
 
 class RoleBuilder extends CreepRole {
-    constructor(minX, maxX, minY, maxY) {
+    constructor() {
         super('builder');
-        this.minX = minX;
-        this.maxX = maxX;
-        this.minY = minY;
-        this.maxY = maxY;
     }
 
     run(creep) {
-        
+
         // se o creep tiver sem energia ele nao ira mais construir
         if (creep.memory.construindo && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.construindo = false;
@@ -23,35 +19,36 @@ class RoleBuilder extends CreepRole {
             creep.memory.construindo = true;
             creep.say('🚧');
         };
-        // logica do construindo
+        // lógica de construção
         if (creep.memory.construindo) {
+            let constructionSites = creep.room.find(FIND_CONSTRUCTION_SITES);
 
-            // verificar se os creeps estao dentro da area de construcao
-            if (!this.estaNaAreaDeConstrucao(creep, this.minX, this.maxX, this.minY, this.maxY)) {
-                creep.moveTo(this.minX + 1, this.minY + 1), { visualizePathStyle: { stroke: strokeBuild } }; // mover para o centro da area
-                return;
+            if (constructionSites.length > 0) {
+                if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(constructionSites[0], { visualizePathStyle: { stroke: strokeHarvest } });
+                }
             } else {
-                var constructionSites = creep.room.find(FIND_CONSTRUCTION_SITES);
-                let closestConstructionSite = creep.pos.findClosestByPath(constructionSites);
-
-                if (closestConstructionSite) {
-                    if (creep.build(closestConstructionSite) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(closestConstructionSite, { visualizePathStyle: { stroke: strokeBuild } });
-                    }
-                }
-                // se o creep n tiver perto de nenhuma construcao, ent ele vai fazer upgrade no rcl
-                else {
-                    let upgrader = new RoleUpgrader();
-                    upgrader.run(creep);
-                }
+                // se não houver sites de construção, mudar para upgrade no RCL
+                creep.say('⬆️');
+                let upgrader = new RoleUpgrader();
+                upgrader.run(creep);
             }
-
         } else {
             // busca source pra fazer harvest
             let sources = creep.room.find(FIND_SOURCES);
             let sourceMaisProxima = creep.pos.findClosestByPath(sources);
 
-            if (sourceMaisProxima) {
+            // Verificar se a source mais próxima está ocupada por muitos creeps
+            let creepsNaSource = creep.room.find(FIND_MY_CREEPS, {
+                filter: creep => creep && creep.pos.isNearTo(sourceMaisProxima)
+            });
+
+            if (creepsNaSource.length >= 3) {
+                // Enviar para outra source se a atual estiver cheia de creeps upgraders
+                sources = sources.filter(source => source.id !== sourceMaisProxima.id);
+            }
+
+            if (sources.length > 0) {
                 if (creep.harvest(sourceMaisProxima) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
                 }

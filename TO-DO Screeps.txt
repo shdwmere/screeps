@@ -14,3 +14,5 @@ Criar um novo módulo 'creepsHandler' para manipular os creeps diretamente, incl
 • logContagemCreeps
 no spawn utils vao restar somente os métodos referente a manipulação do spawn.
 (não esquecer de atualizar as importações require nos módulos dos creeps..)
+
+• stroke do creep builder nao ta funcionando

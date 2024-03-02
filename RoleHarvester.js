@@ -1,5 +1,6 @@
 let CreepRole = require('CreepRole');
 const { strokeHarvest, strokeDeliveryToStructure } = require('./globals');
+let RoleUpgrader = require('RoleUpgrader');
 
 class RoleHarvester extends CreepRole {
     constructor(minX, maxX, minY, maxY) {
@@ -58,6 +59,23 @@ class RoleHarvester extends CreepRole {
                 if (creep.harvest(sourceMaisProxima) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
                 }
+            }
+        }
+        // se o creep tiver sido programado pra entregar energia
+        if (creep.memory.entregandoEnergia && creep.store.getFreeCapacity() > 0) {
+            let estruturasPrecisandoDeEnergia = creep.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_SPAWN ||
+                        structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_CONTAINER ||
+                        structure.structureType == STRUCTURE_TOWER) &&
+                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+            // mas se nao tiver estrutura precisando de energia, entao manda ele aprimorar o rcl.
+            if (estruturasPrecisandoDeEnergia.length === 0) {
+                let upgrader = new RoleUpgrader();
+                upgrader.run(creep);
             }
         }
     }

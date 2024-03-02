@@ -24,6 +24,17 @@ module.exports = {
             }
         }
     },
+    // definirFonteDeEnergia: function(role, sourceIndex) {
+    //     // Loop through all creeps with the specified role
+    //     for (let name in Game.creeps) {
+    //         let creep = Game.creeps[name];
+    //         if (creep.memory.role === role) {
+    //             // Update the source index for this creep
+    //             creep.memory.sourceIndex = sourceIndex;
+    //         }
+    //     }
+    //     //console.log(`Fonte de energia para creeps '${role}' definida como Source[${sourceIndex}]`);
+    // },
     // contando os creeps pertencentes a role
     contarCreeps: function(role) {
         // Filtra todos os creeps do jogo pelo papel específico

@@ -5,30 +5,32 @@ let spawnHandler = require('spawnHandler')
 let creepsHandler = require('creepsHandler')
 
 module.exports.loop = function () {
-
-    creepsHandler.limparCreepsMortos();
-
-    // funções essenciais
+    // spawn handling
     spawnHandler.identificadorVisualdoSpawn();
     spawnHandler.definirSpawns();
 
-    // delimitando áreas de trabalho
-    let areaDeConstrucao = {
-        minX: 27, minY: 22,
-        maxX: 32, maxY: 25
-    };
+    // creep handling
+    creepsHandler.limparCreepsMortos();
+
+    // delimitando area de coleta
     let areaDeColeta = {
-        minX: 25, minY: 13, 
-        maxX: 44, maxY: 43
+        minX: 19, minY: 1, 
+        maxX: 45, maxY: 47
     };
 
-    let limiteHarvesters = 3;
+    let limiteHarvesters = 6;
     let limiteUpgraders = 3;
-    let limiteBuilders = 3;
+    let limiteBuilders = 8;
 
-    let bodyPartsHarvester = criarBodyParts(WORK, 1, CARRY, 1, MOVE, 1);
-    let bodyPartsUpgrader = criarBodyParts(WORK, 2, CARRY, 1, MOVE, 1);
-    let bodyPartsBuilder = criarBodyParts(WORK, 1, CARRY, 1, MOVE, 1);
+    let bodyPartsHarvester = criarBodyParts(WORK, 4, CARRY, 1, MOVE, 2); // 550
+    let bodyPartsUpgrader = criarBodyParts(WORK, 2, CARRY, 1, MOVE, 3); // 400
+    let bodyPartsBuilder = criarBodyParts(WORK, 2, CARRY, 1, MOVE, 3); // 400
+
+
+    // definindo o indice do foco de extracao de energia
+    //creepsHandler.definirFonteDeEnergia('builder', 3);
+    //creepsHandler.definirFonteDeEnergia('upgrader', 3);
+
 
     function criarBodyParts(...args) {
         let bodyParts = [];
@@ -75,7 +77,7 @@ module.exports.loop = function () {
 			upgrader.run(creep);
         };
         if(creep.memory.role == 'builder') {
-            let builder = new RoleBuilder(areaDeConstrucao.minX, areaDeConstrucao.maxX, areaDeConstrucao.minY, areaDeConstrucao.maxY);
+            let builder = new RoleBuilder();
 			builder.run(creep);
         };
     };
