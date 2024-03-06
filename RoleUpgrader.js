@@ -1,5 +1,7 @@
 let CreepRole = require('CreepRole');
-const { strokeHarvest, strokeUpgrade } = require('./globals');
+const { strokeUpgrade } = require('./globals');
+const creepsHandler = require('./creepsHandler');
+
 
 class RoleUpgrader extends CreepRole {
     constructor() {
@@ -24,25 +26,9 @@ class RoleUpgrader extends CreepRole {
                 creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: strokeUpgrade } });
             }
         } else {
-            let sources = creep.room.find(FIND_SOURCES);
-            let sourceMaisProxima = creep.pos.findClosestByPath(sources);
-
-            // Verificar se a source mais próxima está ocupada por muitos creeps
-            let creepsNaSource = creep.room.find(FIND_MY_CREEPS, {
-                filter: creep => creep && creep.pos.isNearTo(sourceMaisProxima)
-            });
-
-            if (creepsNaSource.length >= 3) {
-                // Enviar para outra source se a atual estiver cheia de creeps upgraders
-                sources = sources.filter(source => source.id !== sourceMaisProxima.id);
-            }
-
-            if (sourceMaisProxima) {
-                if (creep.harvest(sourceMaisProxima) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
-                }
-            }
-        }
+            // coletar energia
+            creepsHandler.coletarEnergia(creep);
+        };
     };
 }
 

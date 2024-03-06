@@ -1,48 +1,35 @@
+let spawnHandler = require('spawnHandler');
+let creepsHandler = require('creepsHandler');
+
 let RoleHarvester = require('RoleHarvester');
 let RoleUpgrader = require('RoleUpgrader');
 let RoleBuilder = require('RoleBuilder');
-let spawnHandler = require('spawnHandler')
-let creepsHandler = require('creepsHandler')
+let RoleRepairer = require('RoleRepairer');
 
 module.exports.loop = function () {
-    // spawn handling
-    spawnHandler.identificadorVisualdoSpawn();
     spawnHandler.definirSpawns();
+    spawnHandler.identificadorVisualdoSpawn();
 
-    // creep handling
     creepsHandler.limparCreepsMortos();
 
-    // delimitando area de coleta
-    let areaDeColeta = {
-        minX: 19, minY: 1, 
-        maxX: 45, maxY: 47
-    };
+    // Capacidade total de energia do room inteiro
+    let energy = Game.spawns.Spawn1.room.energyCapacityAvailable;
+    //console.log(energy)
 
-    let limiteHarvesters = 6;
-    let limiteUpgraders = 3;
-    let limiteBuilders = 8;
+    let limiteHarvesters = 4;
+    let limiteUpgraders = 4;
+    let limiteBuilders = 2;
+    let limiteRepairers = 1;
 
-    let bodyPartsHarvester = criarBodyParts(WORK, 4, CARRY, 1, MOVE, 2); // 550
-    let bodyPartsUpgrader = criarBodyParts(WORK, 2, CARRY, 1, MOVE, 3); // 400
-    let bodyPartsBuilder = criarBodyParts(WORK, 2, CARRY, 1, MOVE, 3); // 400
+    let bodyPartsHarvester = creepsHandler.criarBodyParts(WORK, 6, CARRY, 1, MOVE, 2); // 750
+    let bodyPartsUpgrader = creepsHandler.criarBodyParts(WORK, 4, CARRY, 1, MOVE, 2); // 550
+    let bodyPartsBuilder = creepsHandler.criarBodyParts(WORK, 4, CARRY, 1, MOVE, 2); // 550
+    let bodyPartsRepairer = creepsHandler.criarBodyParts(WORK, 4, CARRY, 1, MOVE, 2); // 550
 
 
     // definindo o indice do foco de extracao de energia
     //creepsHandler.definirFonteDeEnergia('builder', 3);
     //creepsHandler.definirFonteDeEnergia('upgrader', 3);
-
-
-    function criarBodyParts(...args) {
-        let bodyParts = [];
-        for (let i = 0; i < args.length; i += 2) {
-            let part = args[i];
-            let count = args[i + 1];
-            for (let j = 0; j < count; j++) {
-                bodyParts.push(part);
-            }
-        }
-        return bodyParts;
-    };
    
 	// spawners automáticos
     if(creepsHandler.contarCreeps('harvester') < limiteHarvesters) {
@@ -51,25 +38,50 @@ module.exports.loop = function () {
     }
     else if (creepsHandler.contarCreeps('upgrader') < limiteUpgraders) {
         creepsHandler.autoSpawnCreep('Spawn1','upgrader', bodyPartsUpgrader, limiteUpgraders);
-        console.log('[+] upgrader na queue!')
+        console.log('\n[+] upgrader na queue!')
+    } else if (creepsHandler.contarCreeps('repairer') < limiteRepairers) {
+        creepsHandler.autoSpawnCreep('Spawn1','repairer', bodyPartsRepairer, limiteRepairers);
+        console.log('\n[+] repairer na queue!')
     }
     else {
         creepsHandler.autoSpawnCreep('Spawn1','builder', bodyPartsBuilder, limiteBuilders);
-        console.log('[+] builder na queue!')
+        console.log('\n[+] builder na queue!')
     };
+
+    // towers filter
+    var towers = Game.rooms['E16N19'].find(FIND_STRUCTURES, {
+        filter: (s) => s.structureType == STRUCTURE_TOWER
+    });
+    
+    // comportamento das tower
+    for (let tower of towers) {
+        var target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+        if(target != undefined) {
+            tower.attack(target);
+        } else {
+            let estruturaAReparar = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (e) => e.hits < e.hitsMax && e.structureType != STRUCTURE_WALL
+            });
+
+            if(estruturaAReparar) {
+                tower.repair(estruturaAReparar)
+            }
+        }
+    }
 
     // logs
     creepsHandler.logContagemCreeps('harvester');
     creepsHandler.logContagemCreeps('upgrader');
     creepsHandler.logContagemCreeps('builder');
-	
+    creepsHandler.logContagemCreeps('repairer');
 
 	// main loop
     for(let name in Game.creeps) {
         let creep = Game.creeps[name];
 
         if(creep.memory.role == 'harvester') {
-            let harvester = new RoleHarvester(areaDeColeta.minX, areaDeColeta.maxX, areaDeColeta.minY, areaDeColeta.maxY);
+            let harvester = new RoleHarvester();
 			harvester.run(creep);
         };
         if(creep.memory.role == 'upgrader') {
@@ -80,5 +92,9 @@ module.exports.loop = function () {
             let builder = new RoleBuilder();
 			builder.run(creep);
         };
+        if(creep.memory.role == 'repairer') {
+            let repairer = new RoleRepairer();
+            repairer.run(creep);
+        };        
     };
 };

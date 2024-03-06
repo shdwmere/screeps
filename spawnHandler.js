@@ -2,19 +2,41 @@ module.exports = {
     definirSpawns: function() {
         for (let spawnName in Game.spawns) {
             let spawn = Game.spawns[spawnName];
-            // definir o nome do spawn na memória do spawn
+            // Definir o nome do spawn na memória do spawn
             spawn.memory.spawnName = spawnName;
-    
-            // adicionar o nome do spawn à lista de spawns na memória global
+            
+            // Capturar e salvar o nome da sala do spawn na memória do spawn
+            let roomName = spawn.room.name;
+            spawn.memory.roomName = roomName;
+
+            // Adicionar o nome do spawn e informações da sala à lista de spawns na memória global
             if (!Memory.spawns) {
                 Memory.spawns = {};
             }
+            if (!Memory.rooms) {
+                Memory.rooms = {};
+            }
+
             Memory.spawns[spawnName] = spawn.memory;
+
+            // Isso verifica se a sala já foi adicionada à memória e, em caso negativo, a adiciona
+            if (!Memory.rooms[roomName]) {
+                Memory.rooms[roomName] = { spawns: [] };
+            }
+            if (!Memory.rooms[roomName].spawns.includes(spawnName)) {
+                Memory.rooms[roomName].spawns.push(spawnName);
+            }
         }
     
-        // remover spawns não mais existentes da memória global
+        // Remover spawns não mais existentes da memória global
         for (let memorySpawn in Memory.spawns) {
             if (!Game.spawns[memorySpawn]) {
+                // Se o spawn foi removido, também consideramos remover referências dele nas informações da sala
+                let roomName = Memory.spawns[memorySpawn].roomName;
+                let spawnIndex = Memory.rooms[roomName].spawns.indexOf(memorySpawn);
+                if (spawnIndex > -1) {
+                    Memory.rooms[roomName].spawns.splice(spawnIndex, 1);
+                }
                 delete Memory.spawns[memorySpawn];
             }
         }

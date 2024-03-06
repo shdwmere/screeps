@@ -1,14 +1,12 @@
 let CreepRole = require('CreepRole');
-const { strokeHarvest, strokeDeliveryToStructure } = require('./globals');
+const { strokeDeliveryToStructure } = require('./globals');
 let RoleUpgrader = require('RoleUpgrader');
+const creepsHandler = require('./creepsHandler');
+
 
 class RoleHarvester extends CreepRole {
-    constructor(minX, maxX, minY, maxY) {
+    constructor() {
         super('harvester');
-        this.minX = minX;
-        this.maxX = maxX;
-        this.minY = minY;
-        this.maxY = maxY;
     }
 
     run(creep) {
@@ -28,9 +26,9 @@ class RoleHarvester extends CreepRole {
             let estruturas = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_CONTAINER ||
-                        structure.structureType == STRUCTURE_TOWER) &&
+                                                structure.structureType ==  STRUCTURE_TOWER ||
+                        structure.structureType == STRUCTURE_EXTENSION ) &&
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
@@ -39,51 +37,18 @@ class RoleHarvester extends CreepRole {
                 if (creep.transfer(estruturas[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(estruturas[0], { visualizePathStyle: { stroke: strokeDeliveryToStructure } });
                 }
-            }
-
-        } else {
-            let sources = creep.room.find(FIND_SOURCES);
-            let sourceMaisProxima = creep.pos.findClosestByPath(sources);
-
-            // Verificar se a source mais próxima está ocupada por muitos creeps
-            let creepsNaSource = creep.room.find(FIND_MY_CREEPS, {
-                filter: creep => creep && creep.pos.isNearTo(sourceMaisProxima)
-            });
-
-            if (creepsNaSource.length >= 3) {
-                // Enviar para outra source se a atual estiver cheia de creeps upgraders
-                sources = sources.filter(source => source.id !== sourceMaisProxima.id);
-            }
-
-            if (sourceMaisProxima) {
-                if (creep.harvest(sourceMaisProxima) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
-                }
-            }
-        }
-        // se o creep tiver sido programado pra entregar energia
-        if (creep.memory.entregandoEnergia && creep.store.getFreeCapacity() > 0) {
-            let estruturasPrecisandoDeEnergia = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_EXTENSION ||
-                        structure.structureType == STRUCTURE_CONTAINER ||
-                        structure.structureType == STRUCTURE_TOWER) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
-            // mas se nao tiver estrutura precisando de energia, entao manda ele aprimorar o rcl.
-            if (estruturasPrecisandoDeEnergia.length === 0) {
+            } else {
+                // se não houver sites de construção, mudar para upgrade no RCL
                 let upgrader = new RoleUpgrader();
                 upgrader.run(creep);
             }
+
+        } else {
+            creepsHandler.coletarEnergia(creep);
         }
+
     }
 
-    // verificar se o creep está dentro da Área de Coleta
-    estaNaAreaDeColeta(creep) {
-        return creep.pos.x >= this.minX && creep.pos.x <= this.maxX && creep.pos.y >= this.minY && creep.pos.y <= this.maxY;
-    }
 }
 
 module.exports = RoleHarvester;
