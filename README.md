@@ -16,19 +16,19 @@ let CreepRole =  require('CreepRole');
 
 class  RoleHarvester  extends  CreepRole {
 
-constructor() {
-    super('harvester');
-};
-    
-run(creep) { 
-    if(creep.memory.entregandoEnergia &&  creep.store[RESOURCE_ENERGY] ==  0) {
+	constructor() {
+		super('harvester');
+	};
+	 
+	run(creep) { 
+		if(creep.memory.entregandoEnergia &&  creep.store[RESOURCE_ENERGY] ==  0) {
 
-        creep.memory.entregandoEnergia =  false;
+			creep.memory.entregandoEnergia =  false;
 
-        creep.say('🔄');
+			creep.say('🔄');
 
-    };
-};
+		};
+	};
 
 };
 
