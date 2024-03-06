@@ -8,25 +8,27 @@ A classe `CreepRole` é uma classe genérica que serve como base para outras cla
     
 -   **Método `run(creep)`:** Este é um método genérico que deve ser implementado nas classes filhas para definir o comportamento específico de cada papel de creep. Se não for implementado em uma classe filha, ele exibirá um erro indicando que o método não foi implementado para o papel correspondente.
 
+Exemplo role.harvester.js:
+
 ```
 let CreepRole =  require('CreepRole');
 
 
 class  RoleHarvester  extends  CreepRole {
 
-	constructor() {
-		super('harvester');
-	};
-	 
-	run(creep) { 
-		if(creep.memory.entregandoEnergia &&  creep.store[RESOURCE_ENERGY] ==  0) {
+constructor() {
+    super('harvester');
+};
+    
+run(creep) { 
+    if(creep.memory.entregandoEnergia &&  creep.store[RESOURCE_ENERGY] ==  0) {
 
-			creep.memory.entregandoEnergia =  false;
+        creep.memory.entregandoEnergia =  false;
 
-			creep.say('🔄');
+        creep.say('🔄');
 
-		};
-	};
+    };
+};
 
 };
 
