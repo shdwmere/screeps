@@ -1,7 +1,8 @@
 let CreepRole = require('CreepRole');
+const CreepsManager = require('CreepsManager');
 const { strokeDeliveryToStructure } = require('./globals');
-let RoleUpgrader = require('RoleUpgrader');
-const creepsHandler = require('./creepsHandler');
+
+let RoleUpgrader = require('role.upgrader');
 
 
 class RoleHarvester extends CreepRole {
@@ -27,15 +28,20 @@ class RoleHarvester extends CreepRole {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_SPAWN ||
                         structure.structureType == STRUCTURE_CONTAINER ||
-                                                structure.structureType ==  STRUCTURE_TOWER ||
+                        structure.structureType ==  STRUCTURE_TOWER ||
                         structure.structureType == STRUCTURE_EXTENSION ) &&
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
+
+            // ordenar as estruturas por proximidade ao creep
+            estruturas.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b));
             
             if (estruturas.length > 0) {
-                if (creep.transfer(estruturas[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(estruturas[0], { visualizePathStyle: { stroke: strokeDeliveryToStructure } });
+                let estruturaAlvo = estruturas[0];
+
+                if (creep.transfer(estruturaAlvo, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(estruturaAlvo, { visualizePathStyle: { stroke: strokeDeliveryToStructure } });
                 }
             } else {
                 // se não houver sites de construção, mudar para upgrade no RCL
@@ -44,7 +50,7 @@ class RoleHarvester extends CreepRole {
             }
 
         } else {
-            creepsHandler.coletarEnergia(creep);
+            CreepsManager.coletarEnergia(creep);
         }
 
     }

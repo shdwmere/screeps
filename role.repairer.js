@@ -1,7 +1,8 @@
 let CreepRole = require('CreepRole');
+const CreepsManager = require('CreepsManager');
 const { strokeRepair } = require('./globals');
-let RoleBuilder = require('RoleBuilder');
-const creepsHandler = require('./creepsHandler');
+
+let RoleBuilder = require('role.builder');
 
 class RoleRepairer extends CreepRole {
     constructor() {
@@ -34,7 +35,7 @@ class RoleRepairer extends CreepRole {
                 builder.run(creep);
             }
         } else {
-            creepsHandler.coletarEnergia(creep);
+            CreepsManager.coletarEnergia(creep);
         }
     }
 }

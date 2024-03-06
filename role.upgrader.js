@@ -1,6 +1,6 @@
 let CreepRole = require('CreepRole');
+const CreepsManager = require('CreepsManager');
 const { strokeUpgrade } = require('./globals');
-const creepsHandler = require('./creepsHandler');
 
 
 class RoleUpgrader extends CreepRole {
@@ -27,7 +27,7 @@ class RoleUpgrader extends CreepRole {
             }
         } else {
             // coletar energia
-            creepsHandler.coletarEnergia(creep);
+            CreepsManager.coletarEnergia(creep);
         };
     };
 }
