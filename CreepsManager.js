@@ -45,5 +45,5 @@ module.exports = {
                 console.log('[-] Limpando creep não-existente da memória:', name)
             }
         }
-    }, 
+    },
 };

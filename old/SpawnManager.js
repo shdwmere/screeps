@@ -30,5 +30,34 @@ module.exports = {
                 Game.spawns['Spawn1'].pos.y, 
                 {align: 'left', opacity: 0.8});
         }
-    }
+    },  
+    autoSpawnCreep: function(spawnName, role, bodyParts, limite) {
+        let creepsEncarregados = _.filter(Game.creeps, (creep) => creep.memory.role == role);
+        if (creepsEncarregados.length < limite) {
+
+            let novoNome = role + Game.time;
+            let spawn = Game.spawns[spawnName];
+
+            if(spawn) {
+                let resultado = spawn.spawnCreep(bodyParts, novoNome, { memory: { role: role } });
+                if(resultado === OK) {
+                    console.log(`spawnando novo ${role}: ${novoNome}`);
+                }
+            } else {
+                console.log(`spawn não encontrado: ${spawnName}`);
+            }
+        }
+    },
+
+    criarBodyParts: function criarBodyParts(...args) {
+        let bodyParts = [];
+        for (let i = 0; i < args.length; i += 2) {
+            let part = args[i];
+            let count = args[i + 1];
+            for (let j = 0; j < count; j++) {
+                bodyParts.push(part);
+            }
+        }
+        return bodyParts;
+    },
 };
