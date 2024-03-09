@@ -27,12 +27,12 @@ module.exports.loop = function () {
     let CreepsObj = {
         limiteHarversters: 4,
         limiteLongDistanceHarvester: 2,
-        limiteUpgraders: 4,
-        limiteBuilders: 2,
+        limiteUpgraders: 2,
+        limiteBuilders: 4,
         limiteRepairers: 0,
-        limiteWallRepairers: 2,
+        limiteWallRepairers: 1,
         limiteHealers: 0,
-        limiteKillers: 1,
+        limiteKillers: 0,
 
         quantidadeHarvesters: _.sum(Game.creeps, (c) => c.memory.role === 'harvester'),
         quantidadeLongDistanceHarvester: _.sum(Game.creeps, (c) => c.memory.role === 'longDistanceHarvester'),
@@ -46,23 +46,23 @@ module.exports.loop = function () {
 
     // fábrica de creeps em ordem decrescente
     if(CreepsObj.quantidadeHarvesters < CreepsObj.limiteHarversters) {
-        harvester = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'harvester');
+        harvester = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'harvester', HOME);
         console.log('\n[+] harvester na queue!');
     }
     else if (CreepsObj.quantidadeLongDistanceHarvester < CreepsObj.limiteLongDistanceHarvester) {
-        LDHarvester = Game.spawns['Spawn1'].criarHarvesterLongaDistancia(energy, 5, 'E16N19', 'E15N19', 0);
+        LDHarvester = Game.spawns['Spawn1'].criarHarvesterLongaDistancia(energy, 5, HOME, 'E15N19', 0);
         console.log('\n[+] longDistanceHarvester na queue!');
     }
     else if (CreepsObj.quantidadeUpgraders <  CreepsObj.limiteUpgraders) {
-        builder = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'upgrader');
+        builder = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'upgrader', HOME);
         console.log('\n[+] upgrader na queue!');
     }
     else if (CreepsObj.quantidadeBuilders <  CreepsObj.limiteBuilders) {
-        builder = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'builder');
+        builder = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'builder', HOME);
         console.log('\n[+] builder na queue!');
     }
     else if (CreepsObj.quantidadeRepairers <  CreepsObj.limiteRepairers) {
-        repairer = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'repairer');
+        repairer = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'repairer', HOME);
         console.log('\n[+] repairer na queue!');
     }
     else if (CreepsObj.quantidadeKillers <  CreepsObj.limiteKillers) {
@@ -75,7 +75,7 @@ module.exports.loop = function () {
     }
     else {
         if (CreepsObj.quantidadeWallRepairers <  CreepsObj.limiteWallRepairers) {
-            wallRepairer = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'wallRepairer');
+            wallRepairer = Game.spawns['Spawn1'].criarCreepBalanceado(energy, 'wallRepairer', HOME);
             console.log('\n[+] wall repairer na queue!');
         }
     }

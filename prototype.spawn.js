@@ -2,7 +2,7 @@
 module.exports = function() {
     // spawner balanceado
     StructureSpawn.prototype.criarCreepBalanceado = 
-    function(energy, roleName){
+    function(energy, roleName, home){
         let numeroDePartes = Math.floor(energy / 200);
         let body = [];
 
@@ -20,7 +20,7 @@ module.exports = function() {
 
         let novoNome = roleName + Game.time;
 
-        return this.createCreep(body, novoNome, {role: roleName, working: false});
+        return this.createCreep(body, novoNome, {role: roleName, working: false, home: home});
     };
 
     StructureSpawn.prototype.criarHarvesterLongaDistancia = function(energy, numeroWorkParts, home, target, sourceIndex) {

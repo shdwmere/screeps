@@ -21,7 +21,7 @@ class RoleLongDistanceHarvester extends CreepRole {
 
         if (creep.memory.working) {
             if (creep.room.name == creep.memory.home) {
-                console.log(creep.room.name)
+                //console.log(creep.room.name)
                 // filtra as estruturas selecionadas
                 let estruturas = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
