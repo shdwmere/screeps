@@ -38,7 +38,7 @@ module.exports  =  RoleHarvester;
 ---
 ## Prototype Spawner Behavior
 
-Criei a função **`criarCreepCustom()`** presente no código **`prototype.spawner`**, que é um protótipo do objeto **`StructureSpawn`**, que como bem sabemos representa um spawn no jogo.
+Criei a função **`criarCreepBalanceado()`** presente no código **`prototype.spawner`**, que é um protótipo do objeto **`StructureSpawn`**, que como bem sabemos representa um spawn no jogo.
 
 Nesta função prototipada nós estamos criando um creep personalizado com base na energia disponível, o corpo do creep é construído com partes de 'WORK', 'CARRY', 'MOVE', sendo a quantidade de cada parte dependente da energia disponível.
 

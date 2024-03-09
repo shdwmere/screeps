@@ -1,5 +1,1 @@
 TO-DO Screeps
-
-Refatorar todos os códigos - ok
-Melhorar a atividade de entrega do harvester baseado na distancia do creep a estrutura - ok
-Prototipar o spawner baseado em energia disponivel. - ok
