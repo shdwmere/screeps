@@ -61,8 +61,10 @@ module.exports = {
                     creep.moveTo(sourceMaisProxima, { visualizePathStyle: { stroke: strokeHarvest } });
                 }
             } else {
-                //console.log(`nenhuma source encontrada próxima do ${spawn}.`);
-            }
+                // sacar do container caso nao hajam fontes disponiveis.
+                //console.log(`nenhuma source disponivel encontrada próxima do ${spawn}, sacando do container.`);
+                this.sacarEnergiaContainer(creep)
+            };
         };
 
     },
@@ -80,7 +82,7 @@ module.exports = {
         */
         let containers = creep.room.find(FIND_STRUCTURES, {
             filter: (s) => {
-                return s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0;
+                return s.structureType == STRUCTURE_CONTAINER && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
             }
         });
 
