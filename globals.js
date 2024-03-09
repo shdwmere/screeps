@@ -6,6 +6,7 @@ const strokeRepair = '#808080';
 const strokeHeal = '#008000';
 const strokeAttack = '#ff0000';
 
+
 module.exports = {
     strokeHarvest,
     strokeDeliveryToStructure,

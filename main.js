@@ -27,7 +27,7 @@ module.exports.loop = function () {
     let CreepsObj = {
         limiteHarversters: 4,
         limiteLongDistanceHarvester: 2,
-        limiteUpgraders: 3,
+        limiteUpgraders: 4,
         limiteBuilders: 2,
         limiteRepairers: 0,
         limiteWallRepairers: 2,

@@ -1,3 +1,12 @@
+## Logica comportamental dos creeps
+- _Harvester_: Coleta energia e preenche o spawn, as torres, as extensoes e containers, se todos depósitos estão cheios então ele se comporta como um `Upgrader`.
+- _Upgrader_: Coleta energia e se move até o controlador para fazer upgrade.
+- _Builder_: Coleta energia e se move até alguma construction site para construir, se não houver nenhuma, ele se comporta como um `Upgrader`.
+- _Repairer_: Coleta energia e repara construções decaídas como roads.
+- _Wall Repairer_: Coleta energia e repara os muros com a menor porcentagem de HP.
+- _Killer_: Creep maluco que se desloca a algum room especifico e assassina todos os creeps e destrói o spawn hostile. Código precisa de melhorias no prototipo de spawn e na logica de funcionamento.
+- _Healer_: Creep que cura creeps aliados. Ainda não dei a devida atenção a essa role da mesma forma que o Killer.
+--
 ## Class CreepRole
 
 A classe `CreepRole` é uma classe genérica que serve como base para outras classes de papéis de creeps no jogo. Ela possui um construtor que recebe o papel específico do creep como parâmetro e um método `run(creep)` que será chamado no loop principal do jogo (em `main.js`) para executar o comportamento específico de cada papel.
