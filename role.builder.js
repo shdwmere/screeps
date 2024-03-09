@@ -12,18 +12,17 @@ class RoleBuilder extends CreepRole {
 
     run(creep) {
         // se o creep tiver sem energia ele nao ira mais construir
-        if (creep.memory.construindo && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.construindo = false;
+        if (creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.working = false;
         };
-        // se o creep estiver full capacity e nao estiver construindo, manda ele construir 
-        if (!creep.memory.construindo && creep.store.getFreeCapacity() == 0) {
-            creep.memory.construindo = true;
+        // se o creep estiver full capacity e nao estiver working, manda ele construir 
+        if (!creep.memory.working && creep.store.getFreeCapacity() == 0) {
+            creep.memory.working = true;
             creep.say('🚧');
         };
         // lógica de construção
-        if (creep.memory.construindo) {
+        if (creep.memory.working) {
             let constructionSites = creep.room.find(FIND_CONSTRUCTION_SITES);
-
             if (constructionSites.length > 0) {
                 if (creep.build(constructionSites[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSites[0], { visualizePathStyle: { stroke: strokeBuild } });

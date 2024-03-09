@@ -10,18 +10,18 @@ class RoleUpgrader extends CreepRole {
 
     run(creep) {
         
-        if(creep.memory.aprimorandoControlador && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.aprimorandoControlador = false;
+        if(creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.working = false;
             creep.say('🔄');
         }
 
         // se o creep estiver full capacity e nao estiver construindo, manda ele construir 
-        if (!creep.memory.aprimorandoControlador && creep.store.getFreeCapacity() == 0) {
-            creep.memory.aprimorandoControlador = true;
+        if (!creep.memory.working && creep.store.getFreeCapacity() == 0) {
+            creep.memory.working = true;
             creep.say('⬆️');
         };
         
-        if (creep.memory.aprimorandoControlador) {
+        if (creep.memory.working) {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller, { visualizePathStyle: { stroke: strokeUpgrade } });
             }

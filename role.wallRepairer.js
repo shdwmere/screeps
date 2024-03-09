@@ -10,43 +10,41 @@ class RoleWallRepairer extends CreepRole {
     }
 
     run(creep) {
-        if (creep.memory.reparandoMuro && creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.reparandoMuro = false;
+        if (creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.working = false;
         }
-        if (!creep.memory.reparandoMuro && creep.store.getFreeCapacity() == 0) {
-            creep.memory.reparandoMuro = true;
+        if (!creep.memory.working && creep.store.getFreeCapacity() == 0) {
+            creep.memory.working = true;
             creep.say('🧱🔧');
         }
 
-        if (creep.memory.reparandoMuro) {
+        if (creep.memory.working) {
             // array dos muros
             let walls = creep.room.find(FIND_STRUCTURES, {
                 filter: (s) => s.structureType == STRUCTURE_WALL 
             });
 
-            let target = undefined
+            let alvo = undefined
             
-            // procurando pelo muro mais próximo com o menor hp, aumentando a porcentagem do hp a cada iteração
-            for ( let percentage = 0.0001; percentage <= 1; percentage = percentage + 0.0001 ) {
-                target = creep.pos.findClosestByPath(walls, {
-                    filter: (w) => w.hits / w.hitsMax < percentage
-                });
-
-                if ( target != undefined ) {
-                    break;
+            // procurando pelo muro com a menor porcentagem de hp a cada iteração
+            let minPercentage = 1;
+            for (let wall of walls) {
+                let percentage = wall.hits / wall.hitsMax;
+                if (percentage < minPercentage) {
+                    minPercentage = percentage;
+                    alvo = wall;
                 }
-            };
-
-            // se encontrar algum target, então repare
-            if ( target != undefined ) {
-              if(creep.repair(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { visualizePathStyle: { stroke: strokeRepair } });
-              };  
-            } else {
-                let builder = new RoleBuilder();
-                builder.run(creep);
             }
-
+            if (alvo) {
+                if(creep.repair(alvo) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(alvo, { visualizePathStyle: { stroke: strokeRepair }})
+                };
+            }  else {
+                console.log(alvo)
+                let builder = new RoleBuilder();
+                builder.run(creep)
+            }
+            
         } else {
             CreepsManager.coletarEnergia(creep);
         }
