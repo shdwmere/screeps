@@ -53,7 +53,7 @@ module.exports = {
 
             // comportamento padrao
             // encontrar as sources mais próximas do spawn
-            let sources = spawn.room.find(FIND_SOURCES);
+            let sources = spawn.room.find(FIND_SOURCES_ACTIVE);
             let sourceMaisProxima = creep.pos.findClosestByPath(sources);
             if (sourceMaisProxima) {
                 // Se houver uma source mais próxima do spawn, coletar energia dela
@@ -63,7 +63,7 @@ module.exports = {
             } else {
                 // sacar do container caso nao hajam fontes disponiveis.
                 //console.log(`nenhuma source disponivel encontrada próxima do ${spawn}, sacando do container.`);
-                this.sacarEnergiaContainer(creep)
+                //this.sacarEnergiaContainer(creep)
             };
         };
 
@@ -82,7 +82,7 @@ module.exports = {
         */
         let containers = creep.room.find(FIND_STRUCTURES, {
             filter: (s) => {
-                return s.structureType == STRUCTURE_CONTAINER && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                return s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] !== 0;;
             }
         });
 

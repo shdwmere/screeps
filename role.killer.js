@@ -17,39 +17,39 @@ class RoleKiller extends CreepRole {
         }
         
         if (creep.memory.killing) {
-            
-            // comandar killers para um room especifico
-            if (roomToRaid != undefined) {
-                // se o creep n tiver nessa room então move ele
-                if (creep.room.name !== roomToRaid) {
+            if(roomToRaid) {
+                if (creep.room.name != roomToRaid) {
                     creep.moveTo(new RoomPosition(4, 5, roomToRaid), { visualizePathStyle: { stroke: strokeAttack } });
                     return;
-                }
-
-                let target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-                let spawnInimigo = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
-                    filter: { structureType: STRUCTURE_SPAWN }
-                });
-
-                if (target) {
-                    // se houver um inimigo, ataca
-                    if (creep.attack(target) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target, { visualizePathStyle: strokeAttack });
+                } else {
+                    let target = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+                    let spawnInimigo = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+                        filter: { structureType: STRUCTURE_SPAWN }
+                    });
+    
+                    console.log(target)
+    
+                    if (target) {
+                        // se houver um inimigo, ataca
+                        if (creep.attack(target) === ERR_NOT_IN_RANGE) {
+                            creep.moveTo(target, { visualizePathStyle: strokeAttack });
+                        }
                     }
-                }
-                else if (spawnInimigo) {
-                    if (creep.attack(spawnInimigo) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(spawnInimigo, { visualizePathStyle: strokeAttack });
+                    else if (spawnInimigo) {
+                        if (creep.attack(spawnInimigo) === ERR_NOT_IN_RANGE) {
+                            creep.moveTo(spawnInimigo, { visualizePathStyle: strokeAttack });
+                        };
                     };
+    
                 };
-
-            };
-        } else {
+            } 
+            }
+        else {
             // retornar para defender a base do spawn
             creep.memory.killing = false;
             let mainSpawn = Game.spawns['Spawn1'];
 
-            if (creep.room.name != mainSpawn) {
+            if (creep.room.name != creep.memory.home) {
                 creep.moveTo(mainSpawn.pos, { visualizePathStyle: { stroke: '#ffffff' } });
                 return;
             };
